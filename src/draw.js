@@ -12,7 +12,7 @@ class Draw {
         this.svg.style.width = '100vw';
         this.svg.style.height = '100vh';
         this.svg.style.pointerEvents = 'none';
-        this.svg.style.zIndex = '1000';
+        this.svg.style.zIndex = '-1';
         document.body.appendChild(this.svg);
 
         this.itemLines = [];
@@ -55,10 +55,7 @@ class Draw {
 
     deleteItemLine(lineId) {
         this.svg.removeChild(document.getElementById(lineId));
-        const index = this.itemLines.findIndex(l => l.id === lineId);
-        if (index !== -1) {
-            this.itemLines.splice(index, 1);
-        }
+        this.itemLines = this.itemLines.filter(l => l.id !== lineId);
     }
 
     deleteItemLines(lines) {
@@ -75,10 +72,7 @@ class Draw {
 
     deleteCheckLine(lineId) {
         this.svg.removeChild(document.getElementById(lineId));
-        const index = this.checkLines.findIndex(l => l.id === lineId);
-        if (index !== -1) {
-            this.checkLines.splice(index, 1);
-        }
+        this.checkLines = this.checkLines.filter(l => l.id !== lineId);
     }
 
     deleteCheckLines(lines) {

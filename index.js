@@ -6,6 +6,7 @@ import { renderDynamicList,
 import { BloomFilter } from './src/bloomFilter.js';
 import { draw } from './src/draw.js';
 
+const drawInstance = draw;
 const bloomSize = 10;
 const hashCount = 2;
 const bloom = new BloomFilter(bloomSize, hashCount);
@@ -25,4 +26,8 @@ document.addEventListener('refreshUI', () => {
 document.addEventListener('DOMContentLoaded', () => {
     addItemToDynamicList(listItems);
     refreshUI();
+});
+
+window.addEventListener('resize', () => {
+    document.dispatchEvent(new Event('refreshUI'));
 });

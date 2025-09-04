@@ -1,13 +1,17 @@
-/* Caption style */
+#check-item-container {
+    padding-top: 100px
+}
+
 .caption {
     font-size: 1em;
-    color: #555;
+    color: #000000;
     margin-top: 6px;
     margin-bottom: 6px;
     text-align: center;
     font-style: italic;
     letter-spacing: 0.2px;
     width: 100%;
+    background-color: #f9f9f9;
 }
 /* Horizontally align add-list-container and check-item-input-container */
 .top-input-container {
