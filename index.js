@@ -1,13 +1,23 @@
-import { renderDynamicList, renderBloomFilterBits, checkItemInBloomFilter } from './src/list.js';
+import { renderDynamicList, renderBloomFilterBits, checkItemInBloomFilter, addItemToDynamicList } from './src/list.js';
 import { BloomFilter } from './src/bloomFilter.js';
 
+const bloomSize = 10;
+const hashCount = 2;
+const bloom = new BloomFilter(bloomSize, hashCount);
+const listItems = ['UFPB'];
+
+
+function refreshUI () {
+    renderDynamicList(listItems, bloom);
+    renderBloomFilterBits('bloom-filter-container', bloom);
+    checkItemInBloomFilter(bloom);
+}
+
+document.addEventListener('refreshUI', () => {
+    refreshUI();
+});
 
 document.addEventListener('DOMContentLoaded', () => {
-    const bloomSize = 30;
-    const hashCount = 3;
-    const bloom = new BloomFilter(bloomSize, hashCount);
-
-    renderDynamicList('add-item-container', 'left-list', 'left-add-btn', ['teste'], bloom);
-    renderBloomFilterBits('bloom-filter-container', bloom);
-    checkItemInBloomFilter('check-item-container', bloom);
+    addItemToDynamicList(listItems);
+    refreshUI();
 });

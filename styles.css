@@ -1,3 +1,30 @@
+/* Caption style */
+.caption {
+    font-size: 1em;
+    color: #555;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    text-align: center;
+    font-style: italic;
+    letter-spacing: 0.2px;
+    width: 100%;
+}
+/* Horizontally align add-list-container and check-item-input-container */
+.top-input-container {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 24px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+.add-list-container, .check-item-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .list-item {
     width: auto;
     height: auto;
@@ -91,4 +118,8 @@ button:hover {
     display: inline-block;
     font-size: 1em;
     margin: 0;
+}
+
+#check-item-container {
+    min-width: 240px;
 }

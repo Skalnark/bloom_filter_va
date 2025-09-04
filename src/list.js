@@ -1,17 +1,10 @@
-// Render a dynamic list in a given container
-export function renderDynamicList(containerId, listId, buttonId, initialItems = [], bloom) {
-    const container = document.getElementById(containerId);
+export function addItemToDynamicList(items = []) {
+    const container = document.getElementById('add-item-input-container');
     if(!container)
     {
-        console.log(`Container with id "${container}" not found.`);
+        console.log(`Input container with id "add-item-input-container" not found.`);
         return;
     }
-
-    container.innerHTML = '';
-    const listDiv = document.createElement('div');
-    listDiv.id = listId;
-    listDiv.className = 'list-elements';
-    container.appendChild(listDiv);
 
     // Input box for item value
     const input = document.createElement('input');
@@ -21,13 +14,44 @@ export function renderDynamicList(containerId, listId, buttonId, initialItems = 
     input.style.display = 'block';
     input.style.marginBottom = '8px';
     container.appendChild(input);
-
+    
     const button = document.createElement('button');
-    button.id = buttonId;
+    button.id = 'add-item-btn';
     button.textContent = 'Add Element';
     container.appendChild(button);
 
-    let items = [...initialItems];
+    function addItem() {
+        const value = input.value.trim();
+        if (value) {
+            items.push(value);
+            input.value = '';
+            document.dispatchEvent(new Event('refreshUI'));
+        }
+    }
+    button.addEventListener('click', addItem);
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            addItem();
+        }
+    });
+
+}
+
+// Render a dynamic list in a given container
+export function renderDynamicList(items = [], bloom) {
+    const container = document.getElementById('add-item-container');
+    if(!container)
+    {
+        console.log(`Container with id "add-item-container" not found.`);
+        return;
+    }
+
+    container.innerHTML = '';
+    const listDiv = document.createElement('div');
+    listDiv.id = 'left-list';
+    listDiv.className = 'list-elements';
+    container.appendChild(listDiv);
+
     function renderList() {
         listDiv.innerHTML = '';
         items.forEach(item => {
@@ -39,20 +63,6 @@ export function renderDynamicList(containerId, listId, buttonId, initialItems = 
         });
     }
     renderList();
-    function addItem() {
-        const value = input.value.trim();
-        if (value) {
-            items.push(value);
-            renderList();
-            input.value = '';
-        }
-    }
-    button.addEventListener('click', addItem);
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            addItem();
-        }
-    });
 }
 
 // Render bloom filter bits in a given container
@@ -79,13 +89,21 @@ export function renderBloomFilterBits(containerId, bloom) {
     });
 }
 
-export function checkItemInBloomFilter(containerId, bloom) {
-    const container = document.getElementById(containerId);
+export function checkItemInBloomFilter(bloom) {
+    const container = document.getElementById('check-item-input-container');
     if(!container)
     {
-        console.log(`Container with id "${containerId}" not found.`);
+        console.log(`Container with id "check-item-input-container" not found.`);
         return;
     }
+    
+    const displayContainer = document.getElementById('check-item-container');
+    if(!displayContainer)
+    {
+        console.log(`Container with id "check-item-container" not found.`);
+        return;
+    }
+
     container.innerHTML = '';
 
     //create input box
@@ -102,16 +120,25 @@ export function checkItemInBloomFilter(containerId, bloom) {
     button.textContent = 'Check Item';
     container.appendChild(button);
 
-    //create result div
-    const resultDiv = document.createElement('div');
-    resultDiv.style.marginTop = '8px';
-    container.appendChild(resultDiv);
+    displayContainer.innerHTML = '';
+
+    const inputWordDiv = document.createElement('div');
+    inputWordDiv.id = 'right-list';
+    inputWordDiv.className = 'list-item';
+    displayContainer.appendChild(inputWordDiv);
+    inputWordDiv.style.opacity = '0';
+
+    const captionDiv = document.createElement('div');
+    captionDiv.id = 'caption';
+    captionDiv.className = 'caption';
+    displayContainer.appendChild(captionDiv);
 
     function checkItem() {
         const value = input.value.trim();
         if (value) {
             let contains = true;
-
+            inputWordDiv.textContent = value;
+            inputWordDiv.style.opacity = '1';
             for (let i = 1; i <= bloom.hashCount; i++) {
                 const pos = bloom.hash(value, i);
                 console.log(`pos: ${pos}`);
@@ -121,8 +148,11 @@ export function checkItemInBloomFilter(containerId, bloom) {
                 }
             }
 
-            resultDiv.textContent = contains ? `"${value}" is possibly in the set.` : `"${value}" is definitely not in the set.`;
-            input.value = '';
+            captionDiv.textContent = contains ? `"${value}" is possibly in the set.` : `"${value}" is definitely not in the set.`;
+        }
+        else {
+            inputWordDiv.style.opacity = '0';
+            captionDiv.textContent = '';
         }
     }
 
