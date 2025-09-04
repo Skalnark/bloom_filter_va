@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="styles.css">
@@ -8,16 +8,21 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Bloom filter visualization tool</title>
 </head>
+
 <body>
-    <script src="index.js" type="module"></script>
-	<div class="top-input-container responsive-flex">
-		<div class="add-list-container" id="add-item-input-container"></div>
-		<div class="check-item-input-container" id="check-item-input-container"></div>
-	</div>
-	<div class="side-by-side-container responsive-flex">
-		<div class="list-container item-list-container" id="add-item-container"></div>
-		<div class="list-container" id="bloom-filter-container"></div>
-		<div class="list-container" id="check-item-container"></div>
+	<script src="index.js" type="module"></script>
+	<div id="filter-container" class="filter-container">
+		<h2>Bloom filter visualization tool</h2>
+		<div class="top-input-container responsive-flex">
+			<div class="add-list-container" id="add-item-input-container"></div>
+			<div class="check-item-input-container" id="check-item-input-container"></div>
+		</div>
+		<div class="side-by-side-container responsive-flex">
+			<div class="list-container item-list-container" id="add-item-container"></div>
+			<div class="list-container" id="bloom-filter-container"></div>
+			<div class="list-container" id="check-item-container"></div>
+		</div>
 	</div>
 </body>
+
 </html>

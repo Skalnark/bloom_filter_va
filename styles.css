@@ -1,4 +1,28 @@
-/* Cool style for input fields */
+.filter-container {
+    max-width: 1100px;
+    margin: 32px auto 0 auto;
+    background: linear-gradient(135deg, #f8fbff 0%, #e3f0ff 100%);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0, 123, 255, 0.10), 0 1.5px 8px rgba(0,0,0,0.04);
+    padding: 32px 24px 40px 24px;
+    border: 1.5px solid #e0eaff;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+.filter-container:hover {
+    box-shadow: 0 12px 40px rgba(0, 123, 255, 0.16), 0 2px 12px rgba(0,0,0,0.06);
+}
+.filter-container h2 {
+    text-align: center;
+    font-size: 2.1em;
+    font-weight: 700;
+    color: #1a3a5d;
+    margin-bottom: 28px;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px #e0eaff;
+}
+
 .input-field {
     padding: 10px 14px;
     border: 2px solid #007bff;
@@ -16,7 +40,6 @@
     box-shadow: 0 0 0 2px #cce4ff;
 }
 
-/* Cool style for input buttons */
 .input-button {
     padding: 10px 20px;
     border: none;
@@ -32,7 +55,7 @@
     background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
     box-shadow: 0 4px 16px rgba(0,123,255,0.18);
 }
-/* Responsive layout for side-by-side container */
+
 .responsive-flex {
     display: flex;
     flex-wrap: wrap;
@@ -88,7 +111,7 @@
     width: 100%;
     background-color: #f9f9f9;
 }
-/* Horizontally align add-list-container and check-item-input-container */
+
 .top-input-container {
     display: flex;
     flex-direction: row;

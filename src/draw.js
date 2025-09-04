@@ -2,17 +2,19 @@ import { Vector } from "./vector.js";
 
 class Draw {
     static svg;
-    static itemLines;
-    static checkLines;
+    itemLines;
+    checkLines;
+    canvasContainer;
 
     constructor() {
+        this.canvasContainer = document.getElementById('filter-container');
         this.initializeSVG();
         this.itemLines = [];
         this.checkLines = [];
     }
 
     renderLines() {
-        document.body.removeChild(this.svg);
+        this.canvasContainer.removeChild(this.svg);
         this.initializeSVG();
 
         for (const v of this.itemLines) {
@@ -30,32 +32,34 @@ class Draw {
         this.svg.style.position = 'absolute';
         this.svg.style.left = '0';
         this.svg.style.top = '0';
-        this.svg.style.width = '100vw';
-        this.svg.style.height = '100vh';
+        this.svg.style.width = '100%';
+        this.svg.style.height = '100%';
         this.svg.style.pointerEvents = 'none';
-        this.svg.style.zIndex = '-1';
-        document.body.appendChild(this.svg);
+        this.canvasContainer.appendChild(this.svg);
     }
 
     #drawLine(v) {
         const rect1 = document.getElementById(v.div1).getBoundingClientRect();
         const rect2 = document.getElementById(v.div2).getBoundingClientRect();
+        const parent = this.canvasContainer.getBoundingClientRect();
 
         let startX, startY, endX, endY;
         if(v.side === 'right')
         {
-            startX = rect1.left + rect1.width / 2;
-            startY = rect1.top + rect1.height / 2;
-            endX = rect2.left + rect2.width;
-            endY = rect2.top + rect2.height / 2;
+            startX = rect1.left - parent.left;
+            startY = rect1.top - parent.top + rect1.height / 2;
+            endX = rect2.left - parent.left + rect2.width;
+            endY = rect2.top - parent.top + rect2.height / 2;
+
+            console.log(`Drawing right line from (${startX}, ${startY}) to (${endX}, ${endY})`);
         }
 
         if(v.side === 'left')
         {
-            startX = rect1.left + rect1.width / 2;
-            startY = rect1.top + rect1.height / 2;
-            endX = rect2.left;
-            endY = rect2.top + rect2.height / 2;
+            startX = rect1.left + rect1.width - parent.left;
+            startY = rect1.top + rect1.height / 2 - parent.top;
+            endX = rect2.left - parent.left;
+            endY = rect2.top + rect2.height / 2 - parent.top;
         }
 
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
