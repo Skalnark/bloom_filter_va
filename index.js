@@ -3,10 +3,8 @@ import { UIBuilder } from './src/UIBuilder.js';
 import { BloomFilter } from './src/bloomFilter.js';
 import { draw } from './src/draw.js';
 
-const bloomSize = 10;
-const hashCount = 2;
-const bloom = new BloomFilter(bloomSize, hashCount);
-const uiBuilder = new UIBuilder(draw, bloom, ['potato', 'tomato', 'cucumber', 'onion', 'carrot'], 'potato');
+const bloom = new BloomFilter(20, 2);
+const uiBuilder = new UIBuilder(draw, bloom, ['potato', 'tomato'], 'potato');
 
 function refreshUI () {
     uiBuilder.renderList();
