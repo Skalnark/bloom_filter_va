@@ -1,22 +1,16 @@
-import { renderDynamicList,
-         renderBloomFilterBits,
-         checkItemInBloomFilter, 
-         addItemToDynamicList } from './src/list.js';
+import { UIBuilder } from './src/UIBuilder.js';
 
 import { BloomFilter } from './src/bloomFilter.js';
 import { draw } from './src/draw.js';
 
-const drawInstance = draw;
 const bloomSize = 10;
 const hashCount = 2;
 const bloom = new BloomFilter(bloomSize, hashCount);
-const listItems = ['UFPB'];
-const debugSearch = '';
+const uiBuilder = new UIBuilder(draw, bloom, ['potato', 'tomato', 'cucumber', 'onion', 'carrot'], 'potato');
 
 function refreshUI () {
-    renderDynamicList(listItems, bloom);
-    renderBloomFilterBits(bloom);
-    checkItemInBloomFilter(bloom, debugSearch);
+    uiBuilder.renderList();
+    uiBuilder.renderBits();
 }
 
 document.addEventListener('refreshUI', () => {
@@ -24,8 +18,14 @@ document.addEventListener('refreshUI', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    addItemToDynamicList(listItems);
-    refreshUI();
+    if (!uiBuilder) {
+        // wait until uiBuilder is initialized
+        setTimeout(() => {
+            refreshUI();
+        }, 50);
+    } else {
+        refreshUI();
+    }
 });
 
 window.addEventListener('resize', () => {

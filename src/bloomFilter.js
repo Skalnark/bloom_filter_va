@@ -14,10 +14,13 @@ export class BloomFilter {
     }
 
     add(item) {
+        const indexes = [];
         for (let i = 1; i <= this.hashCount; i++) {
             const pos = this.hash(item, i);
             this.bits[pos] = true;
+            indexes.push(pos);
         }
+        return indexes;
     }
 
     contains(item) {
