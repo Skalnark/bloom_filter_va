@@ -1,3 +1,5 @@
+import { BloomFilter } from './BloomFilter.js';
+
 class UIBuilder {
 
     draw = null;
@@ -12,7 +14,7 @@ class UIBuilder {
     listDiv = null;
     bloom = null;
 
-    constructor(draw, bloom, initialItems = [], debugSearch = '') {
+    constructor(draw, bloom) {
         this.draw = draw;
         this.bitsRendered = false;
         this.bloom = bloom;
@@ -21,8 +23,10 @@ class UIBuilder {
         this.initializeBloomFilterContainer();
         this.initializeCheckItemContainer();
         this.initializeDisplayContainer();
+        this.initializeStartingParamsUI();
 
-        this.initializeDebug(initialItems, debugSearch);
+        const items = ['apple', 'banana', 'grape', 'orange'];
+        this.initializeDebug(items, 'banana');
     }
 
     renderBits() {
@@ -187,19 +191,88 @@ class UIBuilder {
     }
 
     initializeDisplayContainer() {
-        const displayContainer = document.getElementById('check-item-container');
-        displayContainer.innerHTML = '';
+        this.displayContainer = document.getElementById('check-item-container');
+        this.displayContainer.innerHTML = '';
 
         this.inputWordDiv = document.createElement('div');
         this.inputWordDiv.id = 'right-list';
         this.inputWordDiv.className = 'list-item';
-        displayContainer.appendChild(this.inputWordDiv);
+        this.displayContainer.appendChild(this.inputWordDiv);
         this.inputWordDiv.style.opacity = '0';
 
         this.captionDiv = document.createElement('div');
         this.captionDiv.id = 'caption';
         this.captionDiv.className = 'caption';
-        displayContainer.appendChild(this.captionDiv);
+        this.displayContainer.appendChild(this.captionDiv);
+    }
+
+    initializeStartingParamsUI() {
+
+        const startingParamsContainer = document.getElementById('starting-params-container');
+        startingParamsContainer.innerHTML = '';
+
+        const sizeGroup = document.createElement('div');
+        sizeGroup.style.display = 'flex';
+        sizeGroup.style.alignItems = 'center';
+        sizeGroup.style.marginBottom = '12px';
+
+        const sizeLabel = document.createElement('label');
+        sizeLabel.textContent = 'Bloom filter size:';
+        sizeLabel.setAttribute('for', 'bloom-size-input');
+        sizeLabel.style.marginRight = '8px';
+        sizeLabel.style.minWidth = '140px';
+        sizeLabel.style.textAlign = 'right';
+        sizeGroup.appendChild(sizeLabel);
+
+        const sizeInput = document.createElement('input');
+        sizeInput.type = 'number';
+        sizeInput.placeholder = 'Bloom filter size';
+        sizeInput.className = 'input-field';
+        sizeInput.value = this.bloom.size;
+        sizeInput.id = 'bloom-size-input';
+        sizeGroup.appendChild(sizeInput);
+
+        startingParamsContainer.appendChild(sizeGroup);
+
+        const hashGroup = document.createElement('div');
+        hashGroup.style.display = 'flex';
+        hashGroup.style.alignItems = 'center';
+        hashGroup.style.marginBottom = '12px';
+
+        const hashCountLabel = document.createElement('label');
+        hashCountLabel.textContent = 'Number of hash functions:';
+        hashCountLabel.setAttribute('for', 'bloom-hashcount-input');
+        hashCountLabel.style.marginRight = '8px';
+        hashCountLabel.style.minWidth = '140px';
+        hashCountLabel.style.textAlign = 'right';
+        hashGroup.appendChild(hashCountLabel);
+
+        const hashCountInput = document.createElement('input');
+        hashCountInput.type = 'number';
+        hashCountInput.placeholder = 'Number of hash functions';
+        hashCountInput.className = 'input-field';
+        hashCountInput.value = this.bloom.hashCount;
+        hashCountInput.id = 'bloom-hashcount-input';
+        hashGroup.appendChild(hashCountInput);
+
+        startingParamsContainer.appendChild(hashGroup);
+
+        const setParamsButton = document.createElement('button');
+        setParamsButton.textContent = 'Set Parameters';
+        setParamsButton.className = 'input-button';
+        startingParamsContainer.appendChild(setParamsButton);
+
+        setParamsButton.addEventListener('click', () => {
+            const size = parseInt(sizeInput.value);
+            const hashCount = parseInt(hashCountInput.value);
+            if (!isNaN(size) && !isNaN(hashCount)) {
+                this.bloom = new BloomFilter(size, hashCount);
+                this.draw.clearAllLines();
+                this.listDiv.innerHTML = '';
+                this.inputCheckField.value = '';
+                this.checkItem();
+            }
+        });
     }
 }
 

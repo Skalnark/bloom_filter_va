@@ -1,10 +1,10 @@
 import { UIBuilder } from './src/UIBuilder.js';
 
-import { BloomFilter } from './src/bloomFilter.js';
+import { BloomFilter } from './src/BloomFilter.js';
 import { draw } from './src/draw.js';
 
-const bloom = new BloomFilter(20, 2);
-const uiBuilder = new UIBuilder(draw, bloom, ['potato', 'tomato'], 'potato');
+const bloom = new BloomFilter(10, 2);
+const uiBuilder = new UIBuilder(draw, bloom);
 
 function refreshUI () {
     uiBuilder.renderBits();
@@ -16,9 +16,6 @@ document.addEventListener('refreshUI', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-            document.dispatchEvent(new Event('refreshUI'));
-        }, 100);
 });
 
 window.addEventListener('resize', () => {

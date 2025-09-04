@@ -1,3 +1,11 @@
+#starting-params-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
 .filter-container {
     max-width: 1100px;
     margin: 32px auto 0 auto;

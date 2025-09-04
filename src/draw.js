@@ -50,8 +50,6 @@ class Draw {
             startY = rect1.top - parent.top + rect1.height / 2;
             endX = rect2.left - parent.left + rect2.width;
             endY = rect2.top - parent.top + rect2.height / 2;
-
-            console.log(`Drawing right line from (${startX}, ${startY}) to (${endX}, ${endY})`);
         }
 
         if(v.side === 'left')
@@ -87,6 +85,11 @@ class Draw {
     }
 
     clearCheckLines() {
+        this.checkLines = [];
+    }
+
+    clearAllLines() {
+        this.itemLines = [];
         this.checkLines = [];
     }
 }
