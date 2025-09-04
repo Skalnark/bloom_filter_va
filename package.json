@@ -4,9 +4,9 @@
   "description": "",
   "scripts": {
     "start": "parcel index.html",
-    "build": "rm -rf build && parcel build index.html --public-url ./",
+    "build": "rm -rf dist && parcel build index.html --dist-dir dist --public-url /bloom_filter_va/",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [],
   "author": "",
