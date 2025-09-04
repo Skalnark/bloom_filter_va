@@ -11,7 +11,6 @@ class UIBuilder {
     bitsDiv = null;
     listDiv = null;
     bloom = null;
-    itemList = [];
 
     constructor(draw, bloom, initialItems = [], debugSearch = '') {
         this.draw = draw;
@@ -26,21 +25,11 @@ class UIBuilder {
         this.initializeDebug(initialItems, debugSearch);
     }
 
-    renderList() {
-        this.listDiv.innerHTML = '';
-        this.itemList.forEach(item => {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'list-item';
-            itemDiv.textContent = item;
-            this.listDiv.appendChild(itemDiv);
-        });
-    }
-
     renderBits() {
         this.bitsDiv.innerHTML = '';
         this.bloom.bits.forEach((bit, i) => {
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'list-item';
+            itemDiv.className = 'bit-item';
             itemDiv.textContent = bit ? '1' : '0';
             itemDiv.title = `Bit ${i}`;
             itemDiv.id = 'bit-' + i;
@@ -49,7 +38,6 @@ class UIBuilder {
     }
 
     initializeDebug(initialItems = [], debugSearch = '') {
-        console.log('Initializing debug with items:', initialItems, 'and search:', debugSearch);
         initialItems.forEach(item => {
             this.inputItemField.value = item;
             this.addItem();
@@ -63,6 +51,7 @@ class UIBuilder {
         this.draw.clearCheckLines();
 
         const value = this.inputCheckField.value.trim();
+        this.inputCheckField.value = '';
         if (value) {
             let contains = true;
             this.inputWordDiv.textContent = value;
@@ -70,14 +59,16 @@ class UIBuilder {
             for (let i = 1; i <= this.bloom.hashCount; i++) {
                 const pos = this.bloom.hash(value, i);
                 const bitDiv = document.getElementById('bit-' + pos);
-
-                if (bitDiv) {
-                    this.draw.drawCheckLine(this.inputWordDiv, bitDiv);
-                }
-
+                let color = '#14ce43ff';
                 if (!this.bloom.bits[pos]) {
                     contains = false;
+                    color = '#c93030ff';
                 }
+
+                if (bitDiv) {
+                    this.draw.drawCheckLine(this.inputWordDiv, bitDiv, color);
+                }
+
             }
 
             this.captionDiv.textContent = contains ? `"${value}" is possibly in the set.` : `"${value}" is definitely not in the set.`;
@@ -93,11 +84,39 @@ class UIBuilder {
     addItem() {
         const value = this.inputItemField.value.trim();
         if (value) {
-            this.itemList.push(value);
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'list-item';
+            itemDiv.textContent = value;
+            itemDiv.id = 'item-' + value;
+            this.listDiv.appendChild(itemDiv);
+            const color = this.#stringToColor(value);
+
             this.bloom.add(value);
             this.inputItemField.value = '';
-            document.dispatchEvent(new Event('refreshUI'));
+
+            for (let i = 1; i <= this.bloom.hashCount; i++) {
+                const pos = this.bloom.hash(value, i);
+                const bitDiv = document.getElementById('bit-' + pos);
+
+                if (bitDiv) {
+                    this.draw.drawItemLine(itemDiv, bitDiv, color);
+                }
+            }
+            this.checkItem();
         }
+    }
+
+    #stringToColor(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        let color = '#';
+        for (let i = 0; i < 3; i++) {
+            const value = (hash >> (i * 8)) & 0xFF;
+            color += value.toString(16).padStart(2, '0');
+        }
+        return color;
     }
 
     initializeAddItemInputContainer() {
@@ -106,13 +125,13 @@ class UIBuilder {
         this.inputItemField.type = 'text';
         this.inputItemField.placeholder = 'Enter item value';
         this.inputItemField.maxLength = 20;
-        this.inputItemField.style.display = 'block';
-        this.inputItemField.style.marginBottom = '8px';
+        this.inputItemField.className = 'input-field';
         addItemInputContainer.appendChild(this.inputItemField);
 
         this.inputItemButton = document.createElement('button');
         this.inputItemButton.id = 'add-item-btn';
         this.inputItemButton.textContent = 'Add Element';
+        this.inputItemButton.className = 'input-button';
         addItemInputContainer.appendChild(this.inputItemButton);
 
         this.inputItemButton.addEventListener('click', () => this.addItem());
@@ -132,8 +151,7 @@ class UIBuilder {
         addItemContainer.appendChild(this.listDiv);
     }
 
-    initializeBloomFilterContainer()
-    {
+    initializeBloomFilterContainer() {
         const bloomFilterContainer = document.getElementById('bloom-filter-container');
         bloomFilterContainer.innerHTML = '';
 
@@ -152,12 +170,12 @@ class UIBuilder {
         this.inputCheckField.type = 'text';
         this.inputCheckField.placeholder = 'Enter item to check';
         this.inputCheckField.maxLength = 20;
-        this.inputCheckField.style.display = 'block';
-        this.inputCheckField.style.marginBottom = '8px';
+        this.inputCheckField.className = 'input-field';
         checkItemInputContainer.appendChild(this.inputCheckField);
 
         this.inputCheckButton = document.createElement('button');
         this.inputCheckButton.textContent = 'Check Item';
+        this.inputCheckButton.className = 'input-button';
         checkItemInputContainer.appendChild(this.inputCheckButton);
 
         this.inputCheckButton.addEventListener('click', () => this.checkItem());

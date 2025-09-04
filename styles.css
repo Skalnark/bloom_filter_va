@@ -1,3 +1,78 @@
+/* Cool style for input fields */
+.input-field {
+    padding: 10px 14px;
+    border: 2px solid #007bff;
+    border-radius: 6px;
+    font-size: 1.1em;
+    background: #f8fbff;
+    color: #222;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+    margin-bottom: 8px;
+}
+.input-field:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 0 2px #cce4ff;
+}
+
+/* Cool style for input buttons */
+.input-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.12);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.input-button:hover {
+    background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
+    box-shadow: 0 4px 16px rgba(0,123,255,0.18);
+}
+/* Responsive layout for side-by-side container */
+.responsive-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+@media (max-width: 900px) {
+    .responsive-flex {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+    .list-container {
+        width: 100%;
+        min-width: 0;
+        margin: 0 auto;
+    }
+    .top-input-container {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        font-size: 0.95em;
+    }
+    .list-item {
+        font-size: 1em;
+        min-width: 24px;
+        min-height: 24px;
+        padding: 2px 6px;
+    }
+    .responsive-flex {
+        gap: 8px;
+    }
+}
 #check-item-container {
     padding-top: 100px
 }
@@ -21,7 +96,7 @@
     justify-content: center;
     align-items: flex-start;
     margin-top: 24px;
-    margin-bottom: 16px;
+    margin-bottom: 34px;
     width: 100%;
 }
 .add-list-container, .check-item-input-container {
@@ -31,10 +106,9 @@
 }
 .list-item {
     width: auto;
-    height: auto;
+    height: flex;
     min-width: 32px;
     min-height: 32px;
-    padding: 4px 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,8 +116,32 @@
     border-radius: 1px;
     background: #eef6ff;
     font-size: 1.2em;
-    margin: 4px 0;
-    padding: 2px;
+    margin: 10px 0;
+    padding: 4px;
+}
+
+.list-elements {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 300px;
+    min-width: 100px;
+}
+
+.bit-item {
+    width: auto;
+    height: auto;
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: 1px solid #000000;
+    border-radius: 1px;
+    background: #eef6ff;
+    font-size: 1.2em;
+    margin: 2px 0;
+    padding: 1px;
 }
 
 .side-by-side-container {

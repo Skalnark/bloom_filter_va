@@ -7,8 +7,8 @@ const bloom = new BloomFilter(20, 2);
 const uiBuilder = new UIBuilder(draw, bloom, ['potato', 'tomato'], 'potato');
 
 function refreshUI () {
-    uiBuilder.renderList();
     uiBuilder.renderBits();
+    draw.renderLines();
 }
 
 document.addEventListener('refreshUI', () => {
@@ -16,16 +16,15 @@ document.addEventListener('refreshUI', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (!uiBuilder) {
-        // wait until uiBuilder is initialized
-        setTimeout(() => {
-            refreshUI();
-        }, 50);
-    } else {
-        refreshUI();
-    }
+    setTimeout(() => {
+            document.dispatchEvent(new Event('refreshUI'));
+        }, 100);
 });
 
 window.addEventListener('resize', () => {
+    document.dispatchEvent(new Event('refreshUI'));
+});
+
+window.addEventListener('scroll', () => {
     document.dispatchEvent(new Event('refreshUI'));
 });
