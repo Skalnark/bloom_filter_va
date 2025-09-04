@@ -44,7 +44,7 @@
 
 .side-by-side-container {
     display: flex;
-    gap: 40px;
+    gap: 300px;
     margin-top: 20px;
     justify-content: center;
     margin: 10px;

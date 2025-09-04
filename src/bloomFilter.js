@@ -1,5 +1,3 @@
-// Simple Bloom Filter implementation
-
 export class BloomFilter {
     constructor(size = 10, hashCount = 3) {
         this.size = size;
@@ -7,7 +5,6 @@ export class BloomFilter {
         this.bits = new Array(size).fill(false);
     }
 
-    // Simple hash functions
     hash(str, seed) {
         let hash = 0;
         for (let i = 0; i < str.length; i++) {

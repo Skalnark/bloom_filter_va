@@ -1,5 +1,3 @@
-// D3 visualization: two circles and a slightly curved line
-
 export function drawCirclesAndCurve() {
     const width = 400, height = 200;
     const circle1 = { x: 100, y: 100, r: 30 };

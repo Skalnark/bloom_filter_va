@@ -1,3 +1,11 @@
+import { drawLine, clearAllLines } from './connectDivs.js';
+
+let bitsRendered = false;
+
+document.addEventListener('bitsRendered', () => {
+    bitsRendered = true;
+});
+
 export function addItemToDynamicList(items = []) {
     const container = document.getElementById('add-item-input-container');
     if(!container)
@@ -6,7 +14,6 @@ export function addItemToDynamicList(items = []) {
         return;
     }
 
-    // Input box for item value
     const input = document.createElement('input');
     input.type = 'text';
     input.placeholder = 'Enter item value';
@@ -37,7 +44,6 @@ export function addItemToDynamicList(items = []) {
 
 }
 
-// Render a dynamic list in a given container
 export function renderDynamicList(items = [], bloom) {
     const container = document.getElementById('add-item-container');
     if(!container)
@@ -65,7 +71,6 @@ export function renderDynamicList(items = [], bloom) {
     renderList();
 }
 
-// Render bloom filter bits in a given container
 export function renderBloomFilterBits(containerId, bloom) {
     const container = document.getElementById(containerId);
     if(!container)
@@ -83,13 +88,17 @@ export function renderBloomFilterBits(containerId, bloom) {
             itemDiv.className = 'list-item';
             itemDiv.textContent = bit ? '1' : '0';
             itemDiv.title = `Bit ${i}`;
+            itemDiv.id = 'bit-' + i;
             bitsDiv.appendChild(itemDiv);
         });
         container.appendChild(bitsDiv);
+
+        document.dispatchEvent(new Event('bitsRendered'));
     });
 }
 
-export function checkItemInBloomFilter(bloom) {
+export function checkItemInBloomFilter(bloom, initialItem = '', checkLines = []) {
+
     const container = document.getElementById('check-item-input-container');
     if(!container)
     {
@@ -126,14 +135,23 @@ export function checkItemInBloomFilter(bloom) {
     inputWordDiv.id = 'right-list';
     inputWordDiv.className = 'list-item';
     displayContainer.appendChild(inputWordDiv);
-    inputWordDiv.style.opacity = '0';
 
     const captionDiv = document.createElement('div');
     captionDiv.id = 'caption';
     captionDiv.className = 'caption';
     displayContainer.appendChild(captionDiv);
 
+    input.value = initialItem;
+    checkItem();
+
     function checkItem() {
+        if (!bitsRendered) {
+            setTimeout(checkItem, 100);
+            return;
+        }
+        const svg = document.getElementById('connection-svg');
+        clearAllLines(svg, checkLines);
+
         const value = input.value.trim();
         if (value) {
             let contains = true;
@@ -141,10 +159,17 @@ export function checkItemInBloomFilter(bloom) {
             inputWordDiv.style.opacity = '1';
             for (let i = 1; i <= bloom.hashCount; i++) {
                 const pos = bloom.hash(value, i);
-                console.log(`pos: ${pos}`);
+                const bitDiv = document.getElementById('bit-' + pos);
+                
+                if (bitDiv) {
+                    const line = drawLine(inputWordDiv, bitDiv, svg);
+                    console.log(`drawing line ${line.id}`);
+
+                    checkLines.push(line);
+                }
+
                 if (!bloom.bits[pos]) {
                     contains = false;
-                    break;
                 }
             }
 
