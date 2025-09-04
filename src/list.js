@@ -1,4 +1,4 @@
-import { drawLine, clearAllLines } from './connectDivs.js';
+import { draw } from './draw.js';
 
 let bitsRendered = false;
 
@@ -135,6 +135,7 @@ export function checkItemInBloomFilter(bloom, initialItem = '', checkLines = [])
     inputWordDiv.id = 'right-list';
     inputWordDiv.className = 'list-item';
     displayContainer.appendChild(inputWordDiv);
+    inputWordDiv.style.opacity = '0';
 
     const captionDiv = document.createElement('div');
     captionDiv.id = 'caption';
@@ -146,11 +147,11 @@ export function checkItemInBloomFilter(bloom, initialItem = '', checkLines = [])
 
     function checkItem() {
         if (!bitsRendered) {
-            setTimeout(checkItem, 100);
+            setTimeout(checkItem, 20);
             return;
         }
-        const svg = document.getElementById('connection-svg');
-        clearAllLines(svg, checkLines);
+
+        draw.clearCheckLines();
 
         const value = input.value.trim();
         if (value) {
@@ -162,8 +163,7 @@ export function checkItemInBloomFilter(bloom, initialItem = '', checkLines = [])
                 const bitDiv = document.getElementById('bit-' + pos);
                 
                 if (bitDiv) {
-                    const line = drawLine(inputWordDiv, bitDiv, svg);
-                    console.log(`drawing line ${line.id}`);
+                    const line = draw.drawCheckLine(inputWordDiv, bitDiv);
 
                     checkLines.push(line);
                 }
