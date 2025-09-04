@@ -14,7 +14,7 @@ const debugSearch = '';
 
 function refreshUI () {
     renderDynamicList(listItems, bloom);
-    renderBloomFilterBits('bloom-filter-container', bloom);
+    renderBloomFilterBits(bloom);
     checkItemInBloomFilter(bloom, debugSearch);
 }
 

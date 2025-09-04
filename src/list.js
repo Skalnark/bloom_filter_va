@@ -71,11 +71,11 @@ export function renderDynamicList(items = [], bloom) {
     renderList();
 }
 
-export function renderBloomFilterBits(containerId, bloom) {
-    const container = document.getElementById(containerId);
+export function renderBloomFilterBits(bloom) {
+    const container = document.getElementById('bloom-filter-container');
     if(!container)
     {
-        console.log(`Container with id "${container}" not found.`);
+        console.log(`Container with id "bloom-filter-container" not found.`);
         return;
     }
 
