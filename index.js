@@ -3,7 +3,7 @@ import { UIBuilder } from './src/UIBuilder.js';
 import { BloomFilter } from './src/BloomFilter.js';
 import { draw } from './src/draw.js';
 
-const bloom = new BloomFilter(10, 2);
+const bloom = new BloomFilter(15, 3);
 const uiBuilder = new UIBuilder(draw, bloom);
 
 function refreshUI () {
@@ -16,6 +16,9 @@ document.addEventListener('refreshUI', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        refreshUI();
+    }, 50);
 });
 
 window.addEventListener('resize', () => {

@@ -26,7 +26,7 @@ class UIBuilder {
         this.initializeStartingParamsUI();
 
         const items = ['apple', 'banana', 'grape', 'orange'];
-        this.initializeDebug(items, 'banana');
+        this.initializeDebug(items, 'teste');
     }
 
     renderBits() {

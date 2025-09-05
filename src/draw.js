@@ -39,25 +39,35 @@ class Draw {
     }
 
     #drawLine(v) {
-        const rect1 = document.getElementById(v.div1).getBoundingClientRect();
-        const rect2 = document.getElementById(v.div2).getBoundingClientRect();
+        const dDiv = document.getElementById(v.div2);
+        // if the dDiv content is equals to '0' we set the background color to red
+        if (dDiv.innerHTML === '0') {
+            dDiv.style.backgroundColor = '#f76c6cff';
+        }
+
+        if (dDiv.innerHTML === '1') {
+            dDiv.style.backgroundColor = '#4bb543ff';
+        }
+        
+        const origin = document.getElementById(v.div1).getBoundingClientRect();
+        const destiny = dDiv.getBoundingClientRect();
         const parent = this.canvasContainer.getBoundingClientRect();
 
         let startX, startY, endX, endY;
         if(v.side === 'right')
         {
-            startX = rect1.left - parent.left;
-            startY = rect1.top - parent.top + rect1.height / 2;
-            endX = rect2.left - parent.left + rect2.width;
-            endY = rect2.top - parent.top + rect2.height / 2;
+            startX = origin.left - parent.left;
+            startY = origin.top - parent.top + origin.height / 2;
+            endX = destiny.left - parent.left + destiny.width;
+            endY = destiny.top - parent.top + destiny.height / 2;
         }
 
         if(v.side === 'left')
         {
-            startX = rect1.left + rect1.width - parent.left;
-            startY = rect1.top + rect1.height / 2 - parent.top;
-            endX = rect2.left - parent.left;
-            endY = rect2.top + rect2.height / 2 - parent.top;
+            startX = origin.left + origin.width - parent.left;
+            startY = origin.top + origin.height / 2 - parent.top;
+            endX = destiny.left - parent.left;
+            endY = destiny.top + destiny.height / 2 - parent.top;
         }
 
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
