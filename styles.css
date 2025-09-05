@@ -12,7 +12,7 @@
     margin: 32px auto 0 auto;
     background: linear-gradient(135deg, #f8fbff 0%, #e3f0ff 100%);
     border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(0, 123, 255, 0.10), 0 1.5px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 8px 32px rgba(0, 123, 255, 0.10), 0 1.5px 8px rgba(0, 0, 0, 0.04);
     padding: 32px 24px 40px 24px;
     border: 1.5px solid #e0eaff;
     position: relative;
@@ -23,9 +23,11 @@
     align-items: center;
     text-align: center;
 }
+
 .filter-container:hover {
-    box-shadow: 0 12px 40px rgba(0, 123, 255, 0.16), 0 2px 12px rgba(0,0,0,0.06);
+    box-shadow: 0 12px 40px rgba(0, 123, 255, 0.16), 0 2px 12px rgba(0, 0, 0, 0.06);
 }
+
 .filter-container h2 {
     text-align: center;
     font-size: 2.1em;
@@ -45,9 +47,10 @@
     color: #222;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.08);
     margin-bottom: 8px;
 }
+
 .input-field:focus {
     border-color: #0056b3;
     box-shadow: 0 0 0 2px #cce4ff;
@@ -61,12 +64,13 @@
     font-size: 1.1em;
     font-weight: 500;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,123,255,0.12);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.12);
     transition: background 0.2s, box-shadow 0.2s;
 }
+
 .input-button:hover {
     background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
-    box-shadow: 0 4px 16px rgba(0,123,255,0.18);
+    box-shadow: 0 4px 16px rgba(0, 123, 255, 0.18);
 }
 
 .responsive-flex {
@@ -83,11 +87,14 @@
         gap: 16px;
         align-items: stretch;
     }
+
     .list-container {
         width: 100%;
+        height: 100%;
         min-width: 0;
         margin: 0 auto;
     }
+
     .top-input-container {
         flex-direction: column;
         gap: 12px;
@@ -99,30 +106,32 @@
     body {
         font-size: 0.95em;
     }
+
     .list-item {
         font-size: 1em;
         min-width: 24px;
         min-height: 24px;
         padding: 2px 6px;
     }
+
     .responsive-flex {
         gap: 8px;
     }
 }
+
 #check-item-container {
     padding-top: 100px
 }
 
 .caption {
-    font-size: 1em;
-    color: #000000;
-    margin-top: 6px;
-    margin-bottom: 6px;
+    font-size: 1.15em;
+    margin-top: 10px;
+    margin-bottom: 10px;
     text-align: center;
     font-style: italic;
     letter-spacing: 0.2px;
     width: 100%;
-    background-color: #f9f9f9;
+    font-weight: 700;
 }
 
 .top-input-container {
@@ -135,11 +144,14 @@
     margin-bottom: 34px;
     width: 100%;
 }
-.add-list-container, .check-item-input-container {
+
+.add-list-container,
+.check-item-input-container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
 .list-item {
     width: auto;
     height: flex;
@@ -162,11 +174,12 @@
     justify-content: space-between;
     min-height: 300px;
     min-width: 60px;
+    gap: clamp(10px, 5vw, 100px);
 }
 
 .bit-item {
-    width: 32px;
-    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -183,7 +196,7 @@
     margin-top: 20px;
     justify-content: center;
     margin: 10px;
-    gap: clamp(100px, 12vw, 300px);
+    gap: clamp(70px, 25vw, 400px);
 }
 
 .filter-elements {
@@ -200,24 +213,26 @@ body {
     margin: 0;
     padding: 0;
 }
+
 .lists-row {
     display: flex;
     gap: 40px;
     margin-top: 20px;
     justify-content: center;
 }
+
 .add-item-container {
     padding: 16px;
     background: #fff;
     min-width: 200px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .bloom-filter-container {
     padding: 16px;
     background: #fff;
     min-width: 200px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 button {
@@ -230,6 +245,7 @@ button {
     cursor: pointer;
     font-size: 1em;
 }
+
 button:hover {
     background: #0056b3;
 }

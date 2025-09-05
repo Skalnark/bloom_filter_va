@@ -13,6 +13,7 @@ class UIBuilder {
     bitsDiv = null;
     listDiv = null;
     bloom = null;
+    currentElements = [];
 
     constructor(draw, bloom) {
         this.draw = draw;
@@ -75,11 +76,25 @@ class UIBuilder {
 
             }
 
-            this.captionDiv.textContent = contains ? `"${value}" is possibly in the set.` : `"${value}" is definitely not in the set.`;
+            if(contains){
+                this.captionDiv.textContent = `"${value}" is possibly in the set.`;
+                this.captionAlertDiv.textContent = '(true positive)';
+                this.captionAlertDiv.style.color = '#14ce43ff';
+                if(!this.currentElements.includes(value)){
+                    this.captionAlertDiv.textContent = '(false positive)';
+                    this.captionAlertDiv.style.color = '#ff7b00ff';
+                }
+            }
+            else{
+                this.captionDiv.textContent = `"${value}" is definitely not in the set.`;
+                this.captionAlertDiv.textContent = '(true negative)';
+                this.captionAlertDiv.style.color = '#c93030ff';
+            }
         }
         else {
             this.inputWordDiv.style.opacity = '0';
             this.captionDiv.textContent = '';
+            this.captionAlertDiv.textContent = '';
         }
 
         document.dispatchEvent(new Event('refreshUI'));
@@ -96,6 +111,7 @@ class UIBuilder {
             const color = this.#stringToColor(value);
 
             this.bloom.add(value);
+            this.currentElements.push(value);
             this.inputItemField.value = '';
 
             for (let i = 1; i <= this.bloom.hashCount; i++) {
@@ -204,6 +220,11 @@ class UIBuilder {
         this.captionDiv.id = 'caption';
         this.captionDiv.className = 'caption';
         this.displayContainer.appendChild(this.captionDiv);
+
+        this.captionAlertDiv = document.createElement('div');
+        this.captionAlertDiv.id = 'caption-alert';
+        this.captionAlertDiv.className = 'caption';
+        this.displayContainer.appendChild(this.captionAlertDiv);
     }
 
     initializeStartingParamsUI() {
@@ -262,15 +283,45 @@ class UIBuilder {
         setParamsButton.className = 'input-button';
         startingParamsContainer.appendChild(setParamsButton);
 
+        const dummyDataLabel = document.createElement('label');
+        dummyDataLabel.textContent = 'Enable dummy data:';
+        dummyDataLabel.setAttribute('for', 'dummy-data-checkbox');
+        dummyDataLabel.style.marginRight = '8px';
+        dummyDataLabel.style.minWidth = '140px';
+        dummyDataLabel.style.textAlign = 'right';
+        startingParamsContainer.appendChild(dummyDataLabel);
+
+        const dummyDataCheckbox = document.createElement('input');
+        dummyDataCheckbox.type = 'checkbox';
+        dummyDataCheckbox.id = 'dummy-data-checkbox';
+        dummyDataCheckbox.style.transform = 'scale(1.4)';
+        dummyDataCheckbox.checked = true;
+        this.initializeWithDummyData = true;
+        startingParamsContainer.appendChild(dummyDataCheckbox);
+
+        dummyDataCheckbox.addEventListener('change', () => {
+            const isChecked = dummyDataCheckbox.checked;
+            if (isChecked) {
+                this.initializeWithDummyData = true;
+            }
+        });
+
         setParamsButton.addEventListener('click', () => {
             const size = parseInt(sizeInput.value);
             const hashCount = parseInt(hashCountInput.value);
             if (!isNaN(size) && !isNaN(hashCount)) {
                 this.bloom = new BloomFilter(size, hashCount);
+                this.currentElements = [];
                 this.draw.clearAllLines();
                 this.listDiv.innerHTML = '';
                 this.inputCheckField.value = '';
+                
                 this.checkItem();
+                if(this.initializeWithDummyData){
+                    const items = ['apple', 'banana', 'grape', 'orange'];
+                    this.initializeDebug(items, 'teste');
+                }
+
             }
         });
     }
