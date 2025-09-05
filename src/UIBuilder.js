@@ -1,4 +1,5 @@
 import { BloomFilter } from './BloomFilter.js';
+import { LoremIpsum } from 'lorem-ipsum';
 
 class UIBuilder {
 
@@ -16,6 +17,8 @@ class UIBuilder {
     currentElements = [];
     infoDivs = [];
 
+    lorem = new LoremIpsum();
+
     constructor(draw, bloom) {
         this.draw = draw;
         this.bitsRendered = false;
@@ -29,6 +32,7 @@ class UIBuilder {
         this.initializeInfoContainer();
 
         this.initializeWithDummyData = true;
+        this.nDummyItems = 4;
         this.rebuildUI();
     }
 
@@ -56,7 +60,7 @@ class UIBuilder {
         this.addInfoDiv('Filter Size', () => { return this.bloom.size });
         this.addInfoDiv('Hash Functions', () => { return this.bloom.hashCount });
         this.addInfoDiv('Elements Added', () => { return this.currentElements.length; });
-        this.addInfoDiv('False Positive Rate', () => this.bloom.falsePositiveRate(this.currentElements.length).toFixed(4), ' %');
+        this.addInfoDiv('False Positive Rate', () => (this.bloom.falsePositiveRate(this.currentElements.length) * 100).toFixed(2), ' %');
         //this.addInfoDiv('Optimal Size', () => this.bloom.calculateOptimalSize(this.currentElements.length), ' bits');
         //this.addInfoDiv('Optimal Hash Count', () => this.bloom.calculateOptimalHashCount(this.currentElements.length), ' functions');
     }
@@ -331,6 +335,24 @@ class UIBuilder {
         this.initializeWithDummyData = true;
         group.appendChild(dummyDataCheckbox);
         startingParamsContainer.appendChild(group);
+        
+        group = document.createElement('div');
+        group.className = 'input-group';
+        const randomWordsInputLabel = document.createElement('label');
+        randomWordsInputLabel.textContent = 'Number of items to add:';
+        randomWordsInputLabel.setAttribute('for', 'random-words-input');
+        randomWordsInputLabel.className = 'input-label';
+        group.appendChild(randomWordsInputLabel);
+
+        const randomWordsInput = document.createElement('input');
+        randomWordsInput.type = 'number';
+        randomWordsInput.placeholder = 'Number of items to add';
+        randomWordsInput.className = 'input-field';
+        randomWordsInput.id = 'random-words-input';
+        randomWordsInput.value = 4;
+        group.appendChild(randomWordsInput);
+
+        startingParamsContainer.appendChild(group);
 
         group = document.createElement('div');
         group.className = 'input-group';
@@ -339,6 +361,13 @@ class UIBuilder {
         setParamsButton.className = 'input-button';
         group.appendChild(setParamsButton);
         startingParamsContainer.appendChild(group);
+
+        randomWordsInput.addEventListener('change', () => {
+            const newCount = parseInt(randomWordsInput.value);
+            if (!isNaN(newCount) && newCount > 0) {
+                this.nDummyItems = newCount;
+            }
+        });
 
         dummyDataCheckbox.addEventListener('change', () => {
             const isChecked = dummyDataCheckbox.checked;
@@ -378,9 +407,13 @@ class UIBuilder {
         }
 
         if (this.initializeWithDummyData) {
-            const items = ['apple', 'banana', 'grape', 'orange'];
+            const itemsSet = new Set();
+            while (itemsSet.size < this.nDummyItems) {
+                const sentence = this.lorem.generateWords(1);
+                itemsSet.add(sentence);
+            }
 
-            items.forEach(item => {
+            itemsSet.forEach(item => {
                 this.inputItemField.value = item;
                 this.addItem();
             });
