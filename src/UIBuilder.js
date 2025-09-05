@@ -14,6 +14,7 @@ class UIBuilder {
     listDiv = null;
     bloom = null;
     currentElements = [];
+    infoDivs = [];
 
     constructor(draw, bloom) {
         this.draw = draw;
@@ -25,9 +26,48 @@ class UIBuilder {
         this.initializeCheckItemContainer();
         this.initializeDisplayContainer();
         this.initializeStartingParamsUI();
+        this.initializeInfoContainer();
 
-        const items = ['apple', 'banana', 'grape', 'orange'];
-        this.initializeDebug(items, 'teste');
+        this.initializeWithDummyData = true;
+        this.rebuildUI();
+    }
+
+    // create a new info div
+    addInfoDiv(title, callback, sufix = '') {
+        const group = document.createElement('div');
+        group.className = 'info-group';
+        const label = document.createElement('label');
+        label.textContent = title + ': ';
+        label.className = 'info-label';
+        group.appendChild(label);
+        const valueSpan = document.createElement('span');
+        valueSpan.className = 'info-value';
+        group.appendChild(valueSpan);
+
+        document.addEventListener('refreshUI', () => {
+            valueSpan.textContent = callback() + sufix;
+        });
+
+        this.infoDivs.push(group);
+        valueSpan.textContent = callback();
+    }
+
+    initializeInfoContainer() {
+        this.addInfoDiv('Filter Size', () => { return this.bloom.size });
+        this.addInfoDiv('Hash Functions', () => { return this.bloom.hashCount });
+        this.addInfoDiv('Elements Added', () => { return this.currentElements.length; });
+        this.addInfoDiv('False Positive Rate', () => this.bloom.falsePositiveRate(this.currentElements.length).toFixed(4), ' %');
+        //this.addInfoDiv('Optimal Size', () => this.bloom.calculateOptimalSize(this.currentElements.length), ' bits');
+        //this.addInfoDiv('Optimal Hash Count', () => this.bloom.calculateOptimalHashCount(this.currentElements.length), ' functions');
+    }
+
+    renderInfoContainer() {
+        const infoContainer = document.getElementById('info-container');
+        infoContainer.innerHTML = '';
+
+        for (const info of this.infoDivs) {
+            infoContainer.appendChild(info);
+        }
     }
 
     renderBits() {
@@ -40,16 +80,6 @@ class UIBuilder {
             itemDiv.id = 'bit-' + i;
             this.bitsDiv.appendChild(itemDiv);
         });
-    }
-
-    initializeDebug(initialItems = [], debugSearch = '') {
-        initialItems.forEach(item => {
-            this.inputItemField.value = item;
-            this.addItem();
-        });
-
-        this.inputCheckField.value = debugSearch;
-        this.checkItem();
     }
 
     checkItem() {
@@ -76,16 +106,16 @@ class UIBuilder {
 
             }
 
-            if(contains){
+            if (contains) {
                 this.captionDiv.textContent = `"${value}" is possibly in the set.`;
                 this.captionAlertDiv.textContent = '(true positive)';
                 this.captionAlertDiv.style.color = '#14ce43ff';
-                if(!this.currentElements.includes(value)){
+                if (!this.currentElements.includes(value)) {
                     this.captionAlertDiv.textContent = '(false positive)';
                     this.captionAlertDiv.style.color = '#ff7b00ff';
                 }
             }
-            else{
+            else {
                 this.captionDiv.textContent = `"${value}" is definitely not in the set.`;
                 this.captionAlertDiv.textContent = '(true negative)';
                 this.captionAlertDiv.style.color = '#c93030ff';
@@ -145,7 +175,7 @@ class UIBuilder {
         this.inputItemField.type = 'text';
         this.inputItemField.placeholder = 'Enter item value';
         this.inputItemField.maxLength = 20;
-        this.inputItemField.className = 'input-field';
+        this.inputItemField.className = 'text-input-field';
         addItemInputContainer.appendChild(this.inputItemField);
 
         this.inputItemButton = document.createElement('button');
@@ -190,7 +220,7 @@ class UIBuilder {
         this.inputCheckField.type = 'text';
         this.inputCheckField.placeholder = 'Enter item to check';
         this.inputCheckField.maxLength = 20;
-        this.inputCheckField.className = 'input-field';
+        this.inputCheckField.className = 'text-input-field';
         checkItemInputContainer.appendChild(this.inputCheckField);
 
         this.inputCheckButton = document.createElement('button');
@@ -228,45 +258,53 @@ class UIBuilder {
     }
 
     initializeStartingParamsUI() {
-
         const startingParamsContainer = document.getElementById('starting-params-container');
         startingParamsContainer.innerHTML = '';
 
-        const sizeGroup = document.createElement('div');
-        sizeGroup.style.display = 'flex';
-        sizeGroup.style.alignItems = 'center';
-        sizeGroup.style.marginBottom = '12px';
+        // Add False Positive Rate input label
+        let group = document.createElement('div');
+        /*group.className = 'input-group';
+        const falsePositiveRateLabel = document.createElement('label');
+        falsePositiveRateLabel.textContent = 'Desired FPR (%):';
+        falsePositiveRateLabel.setAttribute('for', 'bloom-false-positive-rate-input');
+        falsePositiveRateLabel.className = 'input-label';
+        group.appendChild(falsePositiveRateLabel);
+
+        const falsePositiveRateInput = document.createElement('input');
+        falsePositiveRateInput.type = 'number';
+        falsePositiveRateInput.placeholder = 'False Positive Rate';
+        falsePositiveRateInput.className = 'input-field';
+        falsePositiveRateInput.id = 'bloom-false-positive-rate-input';
+        falsePositiveRateInput.value = this.bloom.desiredFalsePositiveRate;
+        group.appendChild(falsePositiveRateInput);
+
+        startingParamsContainer.appendChild(group);
+
+        group = document.createElement('div');*/
+        group.className = 'input-group';
 
         const sizeLabel = document.createElement('label');
         sizeLabel.textContent = 'Bloom filter size:';
         sizeLabel.setAttribute('for', 'bloom-size-input');
-        sizeLabel.style.marginRight = '8px';
-        sizeLabel.style.minWidth = '140px';
-        sizeLabel.style.textAlign = 'right';
-        sizeGroup.appendChild(sizeLabel);
+        sizeLabel.className = 'input-label';
+        group.appendChild(sizeLabel);
 
         const sizeInput = document.createElement('input');
-        sizeInput.type = 'number';
-        sizeInput.placeholder = 'Bloom filter size';
         sizeInput.className = 'input-field';
+        sizeInput.type = 'number';
         sizeInput.value = this.bloom.size;
-        sizeInput.id = 'bloom-size-input';
-        sizeGroup.appendChild(sizeInput);
+        group.appendChild(sizeInput);
 
-        startingParamsContainer.appendChild(sizeGroup);
+        startingParamsContainer.appendChild(group);
 
-        const hashGroup = document.createElement('div');
-        hashGroup.style.display = 'flex';
-        hashGroup.style.alignItems = 'center';
-        hashGroup.style.marginBottom = '12px';
+        group = document.createElement('div');
+        group.className = 'input-group';
 
         const hashCountLabel = document.createElement('label');
         hashCountLabel.textContent = 'Number of hash functions:';
         hashCountLabel.setAttribute('for', 'bloom-hashcount-input');
-        hashCountLabel.style.marginRight = '8px';
-        hashCountLabel.style.minWidth = '140px';
-        hashCountLabel.style.textAlign = 'right';
-        hashGroup.appendChild(hashCountLabel);
+        hashCountLabel.className = 'input-label';
+        group.appendChild(hashCountLabel);
 
         const hashCountInput = document.createElement('input');
         hashCountInput.type = 'number';
@@ -274,56 +312,82 @@ class UIBuilder {
         hashCountInput.className = 'input-field';
         hashCountInput.value = this.bloom.hashCount;
         hashCountInput.id = 'bloom-hashcount-input';
-        hashGroup.appendChild(hashCountInput);
+        group.appendChild(hashCountInput);
+        startingParamsContainer.appendChild(group);
 
-        startingParamsContainer.appendChild(hashGroup);
-
-        const setParamsButton = document.createElement('button');
-        setParamsButton.textContent = 'Set Parameters';
-        setParamsButton.className = 'input-button';
-        startingParamsContainer.appendChild(setParamsButton);
-
+        group = document.createElement('div');
+        group.className = 'input-group';
         const dummyDataLabel = document.createElement('label');
         dummyDataLabel.textContent = 'Enable dummy data:';
         dummyDataLabel.setAttribute('for', 'dummy-data-checkbox');
-        dummyDataLabel.style.marginRight = '8px';
-        dummyDataLabel.style.minWidth = '140px';
-        dummyDataLabel.style.textAlign = 'right';
-        startingParamsContainer.appendChild(dummyDataLabel);
+        dummyDataLabel.className = 'input-label';
+        group.appendChild(dummyDataLabel);
 
         const dummyDataCheckbox = document.createElement('input');
         dummyDataCheckbox.type = 'checkbox';
         dummyDataCheckbox.id = 'dummy-data-checkbox';
-        dummyDataCheckbox.style.transform = 'scale(1.4)';
+        dummyDataCheckbox.className = 'input-checkbox';
         dummyDataCheckbox.checked = true;
         this.initializeWithDummyData = true;
-        startingParamsContainer.appendChild(dummyDataCheckbox);
+        group.appendChild(dummyDataCheckbox);
+        startingParamsContainer.appendChild(group);
+
+        group = document.createElement('div');
+        group.className = 'input-group';
+        const setParamsButton = document.createElement('button');
+        setParamsButton.textContent = 'Set Parameters';
+        setParamsButton.className = 'input-button';
+        group.appendChild(setParamsButton);
+        startingParamsContainer.appendChild(group);
 
         dummyDataCheckbox.addEventListener('change', () => {
             const isChecked = dummyDataCheckbox.checked;
             if (isChecked) {
                 this.initializeWithDummyData = true;
             }
-        });
-
-        setParamsButton.addEventListener('click', () => {
-            const size = parseInt(sizeInput.value);
-            const hashCount = parseInt(hashCountInput.value);
-            if (!isNaN(size) && !isNaN(hashCount)) {
-                this.bloom = new BloomFilter(size, hashCount);
-                this.currentElements = [];
-                this.draw.clearAllLines();
-                this.listDiv.innerHTML = '';
-                this.inputCheckField.value = '';
-                
-                this.checkItem();
-                if(this.initializeWithDummyData){
-                    const items = ['apple', 'banana', 'grape', 'orange'];
-                    this.initializeDebug(items, 'teste');
-                }
-
+            else {
+                this.initializeWithDummyData = false;
             }
         });
+
+        sizeInput.addEventListener('change', () => {
+            const newSize = parseInt(sizeInput.value);
+            if (!isNaN(newSize) && newSize > 0) {
+                this.bloom.desiredSize = newSize;
+            }
+        });
+
+        hashCountInput.addEventListener('change', () => {
+            const newHashCount = parseInt(hashCountInput.value);
+            if (!isNaN(newHashCount) && newHashCount > 0) {
+                this.bloom.desiredNumHashCount = newHashCount;
+            }
+        });
+
+        setParamsButton.addEventListener('click', () => this.rebuildUI());
+    }
+
+    rebuildUI() {
+        this.currentElements = [];
+        this.draw.clearAllLines();
+        this.listDiv.innerHTML = '';
+        this.inputCheckField.value = '';
+
+        if(this.bloom.desiredSize != this.bloom.size || this.bloom.desiredNumHashCount != this.bloom.hashCount) {
+            this.bloom = new BloomFilter(this.bloom.desiredSize, this.bloom.desiredNumHashCount);
+        }
+
+        if (this.initializeWithDummyData) {
+            const items = ['apple', 'banana', 'grape', 'orange'];
+
+            items.forEach(item => {
+                this.inputItemField.value = item;
+                this.addItem();
+            });
+
+            this.inputCheckField.value = 'test';
+        }
+        this.checkItem();
     }
 }
 

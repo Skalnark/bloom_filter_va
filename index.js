@@ -8,6 +8,7 @@ const uiBuilder = new UIBuilder(draw, bloom);
 
 function refreshUI () {
     uiBuilder.renderBits();
+    uiBuilder.renderInfoContainer();
     draw.renderLines();
 }
 
